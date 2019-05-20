@@ -10,7 +10,7 @@ var calculadora = {
 
   init: (function(){
     this.tamañoBotones();
-		this.asignarEventosaFuncion();
+		this.eventosFuncion();
 	}),
 
   tamañoBotones: function(){
@@ -25,7 +25,7 @@ var calculadora = {
     };
   },
 
-  asignarEventosaFuncion: function(){
+  eventosFuncion: function(){
 		document.getElementById("0").addEventListener("click", function() {calculadora.mostrarNumero("0");});
 		document.getElementById("1").addEventListener("click", function() {calculadora.mostrarNumero("1");});
 		document.getElementById("2").addEventListener("click", function() {calculadora.mostrarNumero("2");});
@@ -45,6 +45,114 @@ var calculadora = {
 		document.getElementById("menos").addEventListener("click", function() {calculadora.procesoOper("-");});
 		document.getElementById("mas").addEventListener("click", function() {calculadora.procesoOper("+");});
 	},
+
+  limpiarDisplay: function(){
+
+	  this.numeroDisplay = "0";
+		this.operacion = "";
+		this.operadorA = 0;
+		this.operadorB = 0;
+		this.resultado = 0;
+		this.teclaIgual = false;
+		this.todoValor = 0;
+		this.actualizarVisor();
+	},
+
+  signoIzq: function(){
+		if (this.numeroDisplay !="0") {
+			var gsel;
+			if (this.numeroDisplay.charAt(0)=="-") {
+				gsel = this.numeroDisplay.slice(1);
+			}	else {
+				gsel = "-" + this.numeroDisplay;
+			}
+		this.numeroDisplay = "";
+		this.numeroDisplay = gsel;
+		this.actualizarVisor();
+		}
+	},
+
+  teclaPunto: function(){
+		if (this.numeroDisplay.indexOf(".")== -1) {
+			if (this.numeroDisplay == ""){
+				this.numeroDisplay = this.numeroDisplay + "0.";
+			} else {
+				this.numeroDisplay = this.numeroDisplay + ".";
+			}
+			this.actualizarVisor();
+		}
+	},
+
+  mostrarNumero: function(valor){
+		if (this.numeroDisplay.length < 8) {
+
+			if (this.numeroDisplay=="0") {
+				this.numeroDisplay = "";
+				this.numeroDisplay = this.numeroDisplay + valor;
+			} else {
+				this.numeroDisplay = this.numeroDisplay + valor;
+			}
+		this.actualizarVisor();
+		}
+	},
+
+  procesoOper: function(oper){
+		this.operadorA = parseFloat(this.numeroDisplay);
+		this.numeroDisplay = "";
+		this.operacion = oper;
+		this.teclaIgual = false;
+		this.actualizarVisor();
+	},
+
+  solucion: function(){
+
+		if(!this.teclaIgual){
+			this.operadorB = parseFloat(this.numeroDisplay);
+			this.operadorB = this.operadorB;
+			this.realizarOperacion(this.operadorA, this.operadorB, this.operacion);
+
+		} else {
+			this.realizarOperacion(this.operadorA, this.operadorB, this.operacion);
+		}
+
+		this.operadorA = this.resultado;
+		this.numeroDisplay = "";
+
+		if (this.resultado.toString().length < 9){
+			this.numeroDisplay = this.resultado.toString();
+		} else {
+			this.numeroDisplay = this.resultado.toString().slice(0,8) + "...";
+		}
+
+		this.teclaIgual = true;
+		this.actualizarVisor();
+
+	},
+
+  realizarOperacion: function(operadorA, operadorB, operacion){
+		switch(operacion){
+			case "+":
+				this.resultado = eval(operadorA + operadorB);
+			break;
+			case "-":
+				this.resultado = eval(operadorA - operadorB);
+			break;
+			case "*":
+				this.resultado = eval(operadorA * operadorB);
+			break;
+			case "/":
+				this.resultado = eval(operadorA / operadorB);
+			break;
+		}
+	},
+
+  actualizarVisor: function(){
+		this.display.innerHTML = this.numeroDisplay;
+	}
+
+};
+
+calculadora.init();
 
 
 
