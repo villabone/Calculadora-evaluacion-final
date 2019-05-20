@@ -152,9 +152,5 @@ var calculadora = {
 
 };
 
+
 calculadora.init();
-
-
-
-
-}
